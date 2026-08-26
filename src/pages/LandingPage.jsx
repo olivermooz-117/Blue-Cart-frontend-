@@ -5,9 +5,8 @@ import "../styles/landing.css";
 const EXAMPLES = ["Samsung A51", "Bluedio Headphones", "Anker Soundcore 2"];
 const MARKETPLACES = [
   { name: "Amazon", logo: "/amazon-logo.png" },
+  { name: "AliExpress", logo: null },
   { name: "eBay", logo: "/ebay-logo.png" },
-  { name: "Shopify", logo: "/shopify-logo.png" },
-  { name: "Alibaba", logo: "/alibaba-logo.png" },
 ];
 
 function SearchIcon() {
@@ -123,7 +122,7 @@ export default function LandingPage() {
         <div className="hero-copy">
           <h1>Find the product that is actually worth it.</h1>
           <p>
-            BlueCart ranks products from Amazon, eBay, Shopify, and Alibaba
+            BlueCart ranks products from Amazon, AliExpress, and eBay
             using Marginal Benefit and Cost-Benefit scores that factor price,
             delivery, ratings, and payment safety.
           </p>
