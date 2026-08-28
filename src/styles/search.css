@@ -328,8 +328,8 @@
 
 .results-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
 }
 
 .product-card {
@@ -447,6 +447,7 @@
 
   .results-list {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
   }
 }
 

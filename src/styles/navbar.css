@@ -142,11 +142,36 @@
 @media (max-width: 720px) {
   .navbar-inner {
     flex-wrap: wrap;
+    padding: 0.85rem 1.1rem;
   }
 
   .navbar-search {
     order: 3;
     max-width: none;
     width: 100%;
+  }
+
+  .navbar-actions {
+    width: 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+
+  .navbar-search .search-bar {
+    gap: 0.5rem;
+  }
+
+  .navbar-search .search-bar input {
+    padding: 0.75rem 0.9rem 0.75rem 2.4rem;
+    font-size: 0.95rem;
+  }
+
+  .navbar-search .search-bar-field svg {
+    left: 0.8rem;
+  }
+
+  .navbar-search .search-bar button {
+    padding: 0.75rem 1.15rem;
+    font-size: 0.95rem;
   }
 }
