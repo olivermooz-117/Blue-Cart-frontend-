@@ -18,7 +18,7 @@ export const register = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    email: null,
+    email: localStorage.getItem("email"),
     token: localStorage.getItem("token"),
     status: "idle",
     error: null,
@@ -28,6 +28,7 @@ const authSlice = createSlice({
       state.email = null;
       state.token = null;
       localStorage.removeItem("token");
+      localStorage.removeItem("email");
     },
   },
   extraReducers: (builder) => {
@@ -46,6 +47,7 @@ const authSlice = createSlice({
           state.email = action.payload.email;
           state.token = action.payload.access_token;
           localStorage.setItem("token", action.payload.access_token);
+          localStorage.setItem("email", action.payload.email);
         }
       )
       .addMatcher(
