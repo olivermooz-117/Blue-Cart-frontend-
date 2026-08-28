@@ -5,7 +5,7 @@ import "../styles/landing.css";
 const EXAMPLES = ["Samsung A51", "Bluedio Headphones", "Anker Soundcore 2"];
 const MARKETPLACES = [
   { name: "Amazon", logo: "/amazon-logo.png" },
-  { name: "AliExpress", logo: null },
+  { name: "AliExpress", logo: "/aliexpress-logo.png" },
   { name: "eBay", logo: "/ebay-logo.png" },
 ];
 
