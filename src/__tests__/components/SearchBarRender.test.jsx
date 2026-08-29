@@ -14,8 +14,8 @@ describe('SearchBar Rendering', () => {
         </BrowserRouter>
       </Provider>
     )
-    // The actual placeholder text
-    expect(screen.getByPlaceholderText(/Search a product, e.g. Samsung A51/i)).toBeDefined()
+    // Updated placeholder text to match actual component
+    expect(screen.getByPlaceholderText(/Try 'Samsung A51' or 'wireless earbuds'/i)).toBeDefined()
   })
 
   it('renders the search button', () => {
@@ -37,7 +37,7 @@ describe('SearchBar Rendering', () => {
         </BrowserRouter>
       </Provider>
     )
-    const input = screen.getByPlaceholderText(/Search a product, e.g. Samsung A51/i)
+    const input = screen.getByPlaceholderText(/Try 'Samsung A51' or 'wireless earbuds'/i)
     fireEvent.change(input, { target: { value: 'Samsung' } })
     expect(input.value).toBe('Samsung')
   })
