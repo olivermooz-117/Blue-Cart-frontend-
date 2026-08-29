@@ -1,27 +1,3 @@
-<<<<<<< HEAD
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-
-export default defineConfig({
-  plugins: [react()],
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/test/setup.js',
-    css: true,
-    include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
-    exclude: ['node_modules', 'dist'],
-  },
-  optimizeDeps: {
-    esbuildOptions: {
-      loader: {
-        '.js': 'jsx',
-        '.jsx': 'jsx',
-      },
-    },
-  },
-})
-=======
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
@@ -61,7 +37,6 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // Don't cache API calls — search results must always be live.
         navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
           {
@@ -72,5 +47,12 @@ export default defineConfig({
       },
     }),
   ],
-});
->>>>>>> a4fe86ade4cad072ac095565e52a609147d4d2f5
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.js',
+    css: true,
+    include: ['src/**/*.{test,spec}.{js,jsx,ts,tsx}'],
+    exclude: ['node_modules', 'dist'],
+  },
+})
