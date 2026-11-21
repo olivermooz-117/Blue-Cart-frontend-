@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
+import Alert from "../components/Alert";
 import ProductCard from "./ProductCard";
 import "../styles/search.css";
 import "../styles/layout.css";
@@ -16,14 +17,13 @@ const SORTERS = {
 };
 
 export default function ResultsList() {
-  const { results, status, error, query, sites } = useSelector((state) => state.search);
+  const { results, status, query, sites } = useSelector((state) => state.search);
   const [sortKey, setSortKey] = useState("best");
 
   const availableSites = useMemo(() => {
     if (sites && sites.length > 0) {
       return sites;
     }
-    // Fall back to deriving from results if the backend didn't send sites.
     return [...new Set(results.map((listing) => listing.site))];
   }, [sites, results]);
 
@@ -37,27 +37,42 @@ export default function ResultsList() {
   );
 
   if (status === "loading") {
-    return <p className="results-message">Searching…</p>;
+    return (
+      <div className="results-panel">
+        <div className="skeleton-text wide" />
+        <div className="skeleton-text narrow" />
+        <div className="skeleton-text wide" />
+        <div className="skeleton-text narrow" />
+      </div>
+    );
   }
   if (status === "failed") {
     return (
-      <p className="results-message error">
-        Couldn't load results: {error}
-      </p>
+      <div className="results-panel">
+        <Alert type="error">
+          Search couldn&rsquo;t complete right now. Please try again in a moment.
+        </Alert>
+      </div>
     );
   }
   if (status === "succeeded" && results.length === 0) {
     const unavailable = unavailableSites.length
-      ? ` (${unavailableSites.join(", ")} unavailable)`
+      ? ` The shops ${unavailableSites.join(", ")} are temporarily out of reach.`
       : "";
     return (
-      <p className="results-message">
-        No results for "{query}"{unavailable}.
-      </p>
+      <div className="results-panel">
+        <Alert type="info">
+          No results for <strong>"{query}"</strong>.{unavailable} Try another keyword.
+        </Alert>
+      </div>
     );
   }
   if (status === "idle") {
-    return <p className="results-message">Search for a product to compare e-shops.</p>;
+    return (
+      <p className="results-message">
+        Search for a product to compare e-shops.
+      </p>
+    );
   }
 
   return (
@@ -83,14 +98,19 @@ export default function ResultsList() {
         </label>
       </div>
       {unavailableSites.length > 0 && (
-        <p className="results-message">
+        <Alert type="warn">
           {unavailableSites.join(", ")}
-          {unavailableSites.length === 1 ? " is" : " are"} currently unavailable.
-        </p>
+          {unavailableSites.length === 1 ? " is" : " are"} taking a break right
+          now.
+        </Alert>
       )}
       <div className="results-list">
         {sortedResults.map((listing, index) => (
-          <ProductCard key={`${listing.site}-${listing.url ?? index}`} listing={listing} />
+          <ProductCard
+            key={`${listing.site}-${listing.url ?? index}`}
+            listing={listing}
+            style={{ animationDelay: `${index * 0.06}s` }}
+          />
         ))}
       </div>
     </div>

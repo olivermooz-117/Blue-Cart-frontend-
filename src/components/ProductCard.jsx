@@ -5,8 +5,6 @@ import "../styles/search.css";
 const formatKsh = (amount) =>
   amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-// Some upstream image CDNs stall indefinitely instead of erroring, which
-// leaves a plain  spinner forever — give it a few seconds, then give up.
 const IMAGE_LOAD_TIMEOUT_MS = 5000;
 
 function ImagePlaceholder() {
@@ -65,7 +63,7 @@ function ProductImage({ src, alt }) {
   );
 }
 
-export default function ProductCard({ listing }) {
+export default function ProductCard({ listing, style }) {
   const CardTag = listing.url ? "a" : "div";
   const linkProps = listing.url
     ? { href: listing.url, target: "_blank", rel: "noopener noreferrer" }
@@ -79,6 +77,7 @@ export default function ProductCard({ listing }) {
   return (
     <CardTag
       className={`product-card${isHighTrust ? " product-card--trusted" : ""}`}
+      style={style}
       {...linkProps}
     >
       <ProductImage src={listing.image} alt={listing.title} />
@@ -94,11 +93,15 @@ export default function ProductCard({ listing }) {
         Rating: {listing.rating} ({listing.num_ratings} ratings)
       </p>
       <div className="score-row">
-        <span className="score mb">MB {listing.mb_score}%</span>
-        <span className="score cb">CB {listing.cb_score}%</span>
+        <span className={`score badge mb ${isHighTrust ? "badge--glow" : ""}`}>
+          MB {listing.mb_score}%
+        </span>
+        <span className={`score badge cb ${isHighTrust ? "badge--glow" : ""}`}>
+          CB {listing.cb_score}%
+        </span>
       </div>
       {listing.url && (
-        <span className="product-card-link">View on {listing.site} →</span>
+        <span className="product-card-link focus-ring">View on {listing.site} →</span>
       )}
     </CardTag>
   );

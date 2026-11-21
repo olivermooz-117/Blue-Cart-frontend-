@@ -30,10 +30,13 @@
   padding: 0.9rem 1.2rem 0.9rem 2.85rem;
   font-size: 1rem;
   border: none;
-  border-radius: 999px;
-  background: var(--color-surface);
-  box-shadow: inset 0 0 0 1px var(--color-border);
-  transition: box-shadow 0.15s ease, background 0.15s ease;
+  border-radius: var(--radius-pill);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--color-text);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  transition: box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
 .search-bar input::placeholder {
@@ -42,7 +45,8 @@
 
 .search-bar input:focus {
   outline: none;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--color-blue);
   box-shadow: 0 0 0 4px rgba(59, 117, 151, 0.14), inset 0 0 0 1.5px var(--color-blue);
 }
 
@@ -53,7 +57,7 @@
   color: #fff;
   background: linear-gradient(135deg, var(--color-blue), var(--color-blue-dark));
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -72,13 +76,14 @@
 
 .filter-panel {
   position: relative;
-  background: linear-gradient(180deg, #ffffff, var(--color-surface) 140%);
-  border: none;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   padding: 1.5rem 1.35rem 1.25rem;
-  border-radius: 18px;
+  border-radius: var(--radius);
   box-shadow: var(--shadow-md);
   height: fit-content;
   overflow: hidden;
+  backdrop-filter: var(--glass-blur);
 }
 
 .filter-panel::before {
@@ -96,7 +101,7 @@
   font-size: 0.95rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  color: var(--color-navy);
+  color: var(--color-text);
 }
 
 .filter-intro {
@@ -109,7 +114,7 @@
 .filter-block {
   margin-bottom: 1.25rem;
   padding-bottom: 1.25rem;
-  border-bottom: 1px dashed var(--color-border);
+  border-bottom: 1px dashed var(--glass-border);
 }
 
 .filter-block:last-of-type {
@@ -142,6 +147,7 @@
 .filter-block input[type="range"] {
   width: 100%;
   accent-color: var(--color-blue);
+  cursor: pointer;
 }
 
 .filter-value {
@@ -169,10 +175,11 @@
   top: 50%;
   left: 0;
   right: 0;
-  height: 4px;
+  height: 8px;
   transform: translateY(-50%);
-  background: var(--color-border);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 999px;
+  border: 1px solid var(--glass-border);
   pointer-events: none;
 }
 
@@ -180,7 +187,7 @@
   position: absolute;
   top: 0;
   height: 100%;
-  background: var(--color-blue);
+  background: linear-gradient(90deg, var(--color-blue), var(--color-mint));
   border-radius: 999px;
 }
 
@@ -199,20 +206,20 @@
 
 .price-slider input[type="range"]::-webkit-slider-runnable-track {
   background: transparent;
-  height: 4px;
+  height: 8px;
 }
 
 .price-slider input[type="range"]::-moz-range-track {
   background: transparent;
-  height: 4px;
+  height: 8px;
 }
 
 .price-slider input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   pointer-events: auto;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   margin-top: -6px;
   border-radius: 50%;
   background: #fff;
@@ -223,8 +230,8 @@
 
 .price-slider input[type="range"]::-moz-range-thumb {
   pointer-events: auto;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: #fff;
   border: 2px solid var(--color-blue);
@@ -253,10 +260,10 @@
   padding: 0.4rem 0.55rem;
   font-size: 0.85rem;
   color: var(--color-text);
-  background: #fff;
+  background: var(--glass-bg);
   border: none;
   border-radius: 8px;
-  box-shadow: inset 0 0 0 1px var(--color-border);
+  box-shadow: inset 0 0 0 1px var(--glass-border);
 }
 
 .price-inputs input[type="number"]:focus {
@@ -278,7 +285,7 @@
   color: #fff;
   background: linear-gradient(135deg, var(--color-blue), var(--color-blue-dark));
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -320,8 +327,8 @@
   padding: 0.4rem 0.6rem;
   font-size: 0.85rem;
   color: var(--color-text);
-  background: #fff;
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 6px;
   cursor: pointer;
 }
@@ -337,10 +344,18 @@
   font-size: 0.72rem;
   font-weight: 700;
   padding: 0.15rem 0.5rem;
-  border-radius: 999px;
-  color: var(--color-navy);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-text);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  transition: all 0.15s ease;
+}
+
+.results-shop-chip:hover {
+  color: var(--color-blue-dark);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-blue);
+  box-shadow: 0 0 0 3px rgba(59, 117, 151, 0.1);
 }
 
 .results-list {
@@ -350,20 +365,49 @@
 }
 
 .product-card {
+  animation: slideUp 0.35s ease both;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-card {
   display: block;
-  background: #fff;
-  border: none;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   padding: 1.1rem;
-  border-radius: 14px;
+  border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
   color: inherit;
   text-decoration: none;
-  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+  backdrop-filter: var(--glass-blur);
+}
+
+.product-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-blue), var(--color-mint));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
 }
 
 .product-card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+  border-color: var(--color-blue);
+}
+
+.product-card:hover::before {
+  transform: scaleX(1);
+}
+
+.product-card:hover .product-card-image {
+  transform: scale(1.03);
 }
 
 .product-card-image-placeholder {
@@ -386,6 +430,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   font-size: 0.85rem;
+  color: var(--color-text);
 }
 
 .product-card-link {
@@ -397,7 +442,7 @@
 }
 
 .product-card:hover .product-card-link {
-  color: var(--color-blue-dark);
+  color: var(--color-teal);
 }
 
 .product-card-image {
@@ -408,12 +453,13 @@
   margin-bottom: 0.75rem;
   border-radius: calc(var(--radius) - 4px);
   background: var(--color-surface);
+  transition: transform 0.25s ease;
 }
 
 .product-card h3 {
   margin: 0 0 0.5rem;
   font-size: 1rem;
-  color: var(--color-navy);
+  color: var(--color-text);
 }
 
 .product-card p {
@@ -434,21 +480,29 @@
   margin-top: 0.75rem;
 }
 
-.score {
-  font-size: 0.78rem;
+.score.badge {
+  font-size: 0.75rem;
   font-weight: 700;
-  padding: 0.25rem 0.6rem;
-  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--color-text);
 }
 
 .score.mb {
-  color: var(--color-blue-dark);
-  background: #e5eef3;
+  color: var(--color-blue);
+  border-color: rgba(59, 117, 151, 0.45);
 }
 
 .score.cb {
   color: var(--color-mint);
-  background: var(--color-mint-tint);
+  border-color: rgba(47, 184, 154, 0.45);
+}
+
+.score.badge--glow {
+  box-shadow: 0 0 10px rgba(111, 209, 215, 0.35);
+  border-color: rgba(111, 209, 215, 0.55);
 }
 
 /* Trust badge & highlighted trusted cards */
@@ -464,14 +518,22 @@
   font-size: 0.68rem;
   font-weight: 700;
   padding: 0.18rem 0.55rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   white-space: nowrap;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
 }
 
 .trust-badge--cod {
   color: var(--color-mint);
   background: var(--color-mint-tint);
-  border: 1px solid var(--color-mint);
+  border-color: var(--color-mint);
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+.trust-badge--cod:hover {
+  animation-play-state: paused;
+  transform: scale(1.05);
 }
 
 .product-card--trusted {
@@ -479,38 +541,17 @@
   box-shadow: 0 0 0 2px rgba(47, 184, 154, 0.12), var(--shadow-md);
 }
 
-@media (min-width: 640px) {
-  .filter-panel {
-    width: 260px;
-    flex-shrink: 0;
-  }
-
-  .results-panel {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .results-list {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.25rem;
-  }
-}
-
-@media (min-width: 900px) {
-  .results-list {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
 /* Reviews panel */
 
 .reviews-panel {
-  background: linear-gradient(180deg, #ffffff, var(--color-surface) 140%);
+  background: var(--glass-bg);
   border: none;
   padding: 1.5rem 1.35rem 1.25rem;
   border-radius: 18px;
   box-shadow: var(--shadow-md);
   margin-top: 1.5rem;
+  position: relative;
+  backdrop-filter: var(--glass-blur);
 }
 
 .reviews-panel::before {
@@ -532,7 +573,7 @@
   font-size: 0.95rem;
   text-transform: uppercase;
   letter-spacing: 0.03em;
-  color: var(--color-navy);
+  color: var(--color-text);
 }
 
 .reviews-message {
@@ -542,7 +583,7 @@
 }
 
 .reviews-message.error {
-  color: var(--color-error);
+  color: var(--color-text-muted);
 }
 
 .review-form {
@@ -583,10 +624,10 @@
   padding: 0.5rem 0.7rem;
   font-size: 0.9rem;
   color: var(--color-text);
-  background: #fff;
+  background: var(--glass-bg);
   border: none;
   border-radius: 8px;
-  box-shadow: inset 0 0 0 1px var(--color-border);
+  box-shadow: inset 0 0 0 1px var(--glass-border);
 }
 
 .review-form input:focus,
@@ -615,7 +656,7 @@
   color: #fff;
   background: linear-gradient(135deg, var(--color-mint), var(--color-teal));
   border: none;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
 }
@@ -637,13 +678,17 @@
 }
 
 .review-card {
-  background: #fff;
+  background: var(--glass-bg);
   border: none;
   padding: 0.85rem 1rem;
   border-radius: 12px;
   box-shadow: var(--shadow-sm);
   border-left: 4px solid var(--color-mint);
+  animation: slideUp 0.35s ease both;
 }
+
+.review-card:nth-child(2) { animation-delay: 0.08s; }
+.review-card:nth-child(3) { animation-delay: 0.16s; }
 
 .review-header {
   display: flex;
@@ -655,7 +700,7 @@
 
 .review-author {
   font-weight: 700;
-  color: var(--color-navy);
+  color: var(--color-text);
   font-size: 0.9rem;
 }
 
@@ -664,11 +709,24 @@
   color: var(--color-text-muted);
 }
 
-.review-rating {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--color-mint);
-  margin-left: auto;
+.star-rating {
+  display: flex;
+  gap: 0.1rem;
+  color: var(--color-amber);
+}
+
+.star {
+  display: inline-block;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.star--filled {
+  color: var(--color-amber);
+  animation: starPop 0.35s ease both;
+}
+
+.star-rating {
+  font-size: 0.9rem;
 }
 
 .review-date {
@@ -684,9 +742,98 @@
   white-space: pre-wrap;
 }
 
+/* Star picker (inline rating selector) */
+
+.star-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  color: var(--color-text);
+}
+
+.star-picker {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 0.15rem;
+  justify-content: flex-end;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.1rem;
+  font-size: 1.3rem;
+  color: #26323f;
+  transition: transform 0.12s ease, color 0.12s ease;
+}
+
+.star-btn--active {
+  color: var(--color-amber);
+  transform: scale(1.25);
+  animation: starPop 0.25s ease both;
+}
+
+.star-btn:hover {
+  color: var(--color-amber);
+  transform: scale(1.3);
+}
+
+/* Confetti celebration */
+
+.confetti {
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.confetti-piece {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: confetti 0.9s ease-out both;
+}
+
+/* Loading skeletons */
+
+.skeleton-text {
+  height: 0.95rem;
+  border-radius: 6px;
+  margin-bottom: 0.6rem;
+}
+
+.skeleton-text.wide { width: 65%; }
+.skeleton-text.narrow { width: 40%; }
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
 @media (min-width: 640px) {
+  .filter-panel {
+    width: 260px;
+    flex-shrink: 0;
+  }
+
   .reviews-panel {
     width: 260px;
     flex-shrink: 0;
+  }
+}
+
+@media (min-width: 900px) {
+  .results-list {
+    grid-template-columns: repeat(3, 1fr);
   }
 }

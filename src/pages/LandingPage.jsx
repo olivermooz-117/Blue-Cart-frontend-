@@ -119,6 +119,43 @@ export default function LandingPage() {
           %
         </span>
 
+        <div className="hero-illustration animate-float">
+          <svg viewBox="0 0 260 180" fill="none" aria-hidden="true" role="img">
+            <defs>
+              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#3b7597" />
+                <stop offset="100%" stopColor="#093c5d" />
+              </linearGradient>
+            </defs>
+            <circle cx="200" cy="150" r="20" fill="#2fb89a" opacity="0.9" />
+            <circle cx="220" cy="120" r="14" fill="#6fd1d7" opacity="0.9" />
+            <circle cx="180" cy="110" r="10" fill="#f5a623" opacity="0.9" />
+            <path
+              d="M40 140 L40 60 Q130 60 130 140 L40 140 Z"
+              stroke="url(#grad1)"
+              strokeWidth="14"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path d="M130 60 L130 140" stroke="url(#grad1)" strokeWidth="14" strokeLinecap="round" />
+            <circle cx="40" cy="60" r="8" fill="#fff" opacity="0.9" />
+            <circle cx="130" cy="60" r="8" fill="#fff" opacity="0.9" />
+            <circle cx="40" cy="140" r="8" fill="#fff" opacity="0.9" />
+            <circle cx="130" cy="140" r="8" fill="#fff" opacity="0.9" />
+            <rect x="55" cy="85" width="40" height="20" rx="10" fill="#fff" />
+            <rect x="70" cy="115" width="25" height="12" rx="6" fill="#eef2f5" />
+            <path
+              d="M200 100 L230 80 L210 110 Z"
+              fill="#3b7597"
+              opacity="0.9"
+            />
+            <circle cx="200" cy="100" r="4" fill="#fff" />
+            <circle cx="230" cy="80" r="4" fill="#fff" />
+            <circle cx="210" cy="110" r="4" fill="#fff" />
+          </svg>
+        </div>
+
         <div className="hero-copy">
           <h1>Find the product that is actually worth it.</h1>
           <p>
@@ -172,8 +209,12 @@ export default function LandingPage() {
 
       <section className="feature-panel">
         <div className="feature-grid">
-          {FEATURES.map(({ metric, title, body, Icon }) => (
-            <div key={title} className="feature-card">
+          {FEATURES.map(({ metric, title, body, Icon }, idx) => (
+            <div
+              key={title}
+              className={`feature-card animate-slide-up`}
+              style={{ animationDelay: `${idx * 0.1}s` }}
+            >
               <div className="feature-card-top">
                 <span className="feature-icon">
                   <Icon />

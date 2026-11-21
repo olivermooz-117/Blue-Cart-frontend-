@@ -24,6 +24,23 @@
   user-select: none;
 }
 
+.hero-illustration {
+  position: absolute;
+  top: 10%;
+  right: 2rem;
+  width: 320px;
+  max-width: 42vw;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.hero-illustration svg {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 12px 24px rgba(9, 60, 93, 0.12));
+}
+
 .hero-copy {
   position: relative;
   z-index: 1;
@@ -35,7 +52,7 @@
   font-size: clamp(2.6rem, 5.6vw, 4.25rem);
   line-height: 1.03;
   letter-spacing: -0.02em;
-  color: #000;
+  color: var(--color-text);
   margin: 0 0 1.25rem;
 }
 
@@ -195,12 +212,38 @@
   border-radius: 16px;
   padding: 1.75rem;
   box-shadow: var(--shadow-sm);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-blue), var(--color-mint));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
 }
 
 .feature-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-blue);
+}
+
+.feature-card:hover::before {
+  transform: scaleX(1);
+}
+
+.feature-card:hover .feature-icon {
+  transform: scale(1.1) rotate(-6deg);
+  background: var(--color-blue-dark);
+  color: #fff;
 }
 
 .feature-card-top {
@@ -219,6 +262,7 @@
   color: var(--color-blue-dark);
   background: var(--color-mint-tint);
   border-radius: 12px;
+  transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease;
 }
 
 .feature-icon svg {

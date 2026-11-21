@@ -17,6 +17,10 @@ BlueCart helps users compare products across **Amazon, AliExpress, and eBay** us
 | **Product reviews** | Leave and read reviews per search query (guest or logged-in) |
 | **Trust signals** | Pay-after-delivery badges and trusted-product highlights |
 | **Marketplace availability** | See which shops contributed results and which are unavailable |
+| **Lively SVG UI** | Animated illustrations, hover transitions, star ratings, confetti, and staggered result reveals |
+| **Pixel-art background** | Canvas-based animated particle system with pixel-grid overlay behind the app shell |
+| **Glassmorphism** | Frosted-glass cards, sliders, and panels with backdrop blur on a dark theme |
+| **Pill-shaped badges & alerts** | Modern MB/CB score badges and friendly non-harsh alert/empty states |
 | Authentication | Email/password register and login |
 | Search history | Logged-in users can view and re-run past searches |
 | **Saved preferences** | Ranking weights remembered via localStorage |

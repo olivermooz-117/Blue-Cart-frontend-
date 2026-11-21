@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+import AnimatedBackground from "./components/AnimatedBackground";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import AuthPage from "./pages/AuthPage";
@@ -12,6 +13,10 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="app-shell">
+        <div className="app-bg">
+          <AnimatedBackground />
+          <div className="pixel-grid" aria-hidden="true" />
+        </div>
         <Navbar />
         <main className="app-main">
           <Routes>

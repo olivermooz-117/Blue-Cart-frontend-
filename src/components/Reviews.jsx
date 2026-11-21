@@ -1,10 +1,66 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import Alert from "../components/Alert";
 import { fetchReviews, submitReview } from "../store/reviewsSlice";
 import "../styles/search.css";
 
-const STAR_LABELS = { 1: "1", 2: "2", 3: "3", 4: "4", 5: "5" };
+function StarRating({ rating, size = 1.1 }) {
+  const full = Math.round(rating);
+  return (
+    <div className="star-rating" aria-label={`Rating: ${rating} of 5`}>
+      {[1, 2, 3, 4, 5].map((n) => (
+        <span
+          key={n}
+          className={`star ${n <= full ? "star--filled" : ""}`}
+          style={{ fontSize: `${size}rem` }}
+          aria-hidden="true"
+        >
+          ★
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function Confetti({ count = 30, start = false }) {
+  const [burst, setBurst] = useState(start);
+  useEffect(() => {
+    if (!start) return;
+    const t = setTimeout(() => setBurst(false), 900);
+    return () => clearTimeout(t);
+  }, [start]);
+  if (!burst) return null;
+  return (
+    <div className="confetti">
+      {Array.from({ length: count }).map((_, i) => {
+        const color = [
+          varColor("--color-blue"),
+          varColor("--color-mint"),
+          varColor("--color-amber"),
+          varColor("--color-teal"),
+        ][i % 4];
+        return (
+          <div
+            key={i}
+            className="confetti-piece"
+            style={{
+              left: `${20 + (i % 10) * 6}%`,
+              top: `${10 + (i % 6) * 8}%`,
+              backgroundColor: color,
+              animationDelay: `${i * 0.04}s`,
+              animationDuration: `${0.7 + (i % 5) * 0.1}s`,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+function varColor(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || "#3b7597";
+}
 
 export default function Reviews({ query }) {
   const dispatch = useDispatch();
@@ -15,7 +71,7 @@ export default function Reviews({ query }) {
     status: "idle",
     error: null,
   });
-  const { reviews, status, error } = reviewsState;
+  const { reviews, status } = reviewsState;
 
   const [author, setAuthor] = useState(email || "");
   const [shop, setShop] = useState("");
@@ -23,6 +79,7 @@ export default function Reviews({ query }) {
   const [rating, setRating] = useState(5);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [celebrate, setCelebrate] = useState(false);
 
   // Fetch reviews whenever the query changes.
   useEffect(() => {
@@ -53,6 +110,8 @@ export default function Reviews({ query }) {
         setShop("");
         setComment("");
         setRating(5);
+        setCelebrate(true);
+        setTimeout(() => setCelebrate(false), 900);
       },
       () => {
         setSubmitting(false);
@@ -74,15 +133,16 @@ export default function Reviews({ query }) {
     return (
       <section className="reviews-panel">
         <h3>Reviews</h3>
-        <p className="reviews-message error">
-          Couldn't load reviews: {error}
-        </p>
+        <Alert type="error">
+          Reviews couldn&rsquo;t load right now. You can still submit one below.
+        </Alert>
       </section>
     );
   }
 
   return (
     <section className="reviews-panel">
+      {celebrate && <Confetti count={24} start={celebrate} />}
       <h3>Reviews</h3>
 
       <form className="review-form" onSubmit={handleSubmit} noValidate>
@@ -106,15 +166,22 @@ export default function Reviews({ query }) {
           </label>
         </div>
         <div className="review-form-row">
-          <label>
+          <label className="star-label">
             Rating
-            <select value={rating} onChange={(event) => setRating(event.target.value)}>
-              {Object.entries(STAR_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label} star{value > 1 ? "s" : ""}
-                </option>
+            <div className="star-picker" role="radiogroup" aria-label="Rating">
+              {[5, 4, 3, 2, 1].map((n) => (
+                <button
+                  type="button"
+                  key={n}
+                  className={`star-btn ${n <= rating ? "star-btn--active" : ""}`}
+                  onClick={() => setRating(n)}
+                  aria-label={`${n} star${n > 1 ? "s" : ""}`}
+                  aria-pressed={n <= rating}
+                >
+                  ★
+                </button>
               ))}
-            </select>
+            </div>
           </label>
         </div>
         <div className="review-form-row full">
@@ -144,14 +211,11 @@ export default function Reviews({ query }) {
           <p className="reviews-message">No reviews yet for “{query}”. Be the first!</p>
         ) : (
           reviews.map((review) => (
-            <div key={review.id} className="review-card">
+            <div key={review.id} className="review-card animate-slide-up">
               <div className="review-header">
                 <span className="review-author">{review.author}</span>
                 <span className="review-shop">· {review.shop}</span>
-                <span className="review-rating">
-                  {"★".repeat(Math.round(review.rating))}
-                  {review.rating}
-                </span>
+                <StarRating rating={review.rating} size={0.9} />
                 <span className="review-date">
                   {review.created_at ? new Date(review.created_at).toLocaleDateString() : ""}
                 </span>

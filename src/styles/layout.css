@@ -1,10 +1,11 @@
-/* Generic page wrapper shared by SearchPage and HistoryPage.
-   Rarely changes — page-specific styling belongs in that page's own file. */
+/* Generic page wrapper shared by SearchPage and HistoryPage. */
 
 .page {
   max-width: 1180px;
   margin: 0 auto;
   padding: 2rem 1.5rem 3rem;
+  position: relative;
+  z-index: 10;
 }
 
 .page-intro {
@@ -18,24 +19,27 @@
   flex-direction: column;
   gap: 1.25rem;
   margin-bottom: 2rem;
+  position: relative;
+  z-index: 10;
 }
 
 /* Generic message box, used across search results, history, and reviews. */
 
 .results-message {
   color: var(--color-text-muted);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius);
   padding: 1rem 1.25rem;
   margin: 0;
   align-self: flex-start;
+  backdrop-filter: var(--glass-blur);
 }
 
 .results-message.error {
-  color: var(--color-error);
-  background: #fbeeea;
-  border-color: #f0d6cd;
+  color: var(--color-text-muted);
+  background: var(--color-error-tint);
+  border-color: rgba(179, 69, 47, 0.35);
 }
 
 @media (min-width: 640px) {
