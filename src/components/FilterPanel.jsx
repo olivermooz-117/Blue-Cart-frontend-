@@ -12,7 +12,7 @@ const WEIGHTS_INFO = {
   },
   trust: {
     label: "Payment safety",
-    hint: "Higher = favor listings that let you pay after delivery",
+    hint: "Higher = favor listings that let you pay after delivery and are well rated",
   },
 };
 

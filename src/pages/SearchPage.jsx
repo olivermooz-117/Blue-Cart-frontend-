@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 import FilterPanel from "../components/FilterPanel";
 import ResultsList from "../components/ResultsList";
+import Reviews from "../components/Reviews";
 import { runSearch } from "../store/searchSlice";
 import "../styles/layout.css";
 
@@ -30,8 +31,11 @@ export default function SearchPage() {
         )}
       </p>
       <div className="page-body">
-        <FilterPanel />
-        <ResultsList />
+        <div className="search-main">
+          <FilterPanel />
+          <ResultsList />
+        </div>
+        <Reviews query={query} />
       </div>
     </div>
   );

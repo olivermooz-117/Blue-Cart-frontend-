@@ -21,6 +21,7 @@ const searchSlice = createSlice({
     query: "",
     results: [],
     allResults: [],
+    sites: [],
     status: "idle", // idle | loading | succeeded | failed
     error: null,
   },
@@ -36,6 +37,7 @@ const searchSlice = createSlice({
         state.query = action.payload.query;
         state.results = action.payload.results;
         state.allResults = action.payload.results;
+        state.sites = action.payload.sites || [];
       })
       .addCase(runSearch.rejected, (state, action) => {
         state.status = "failed";

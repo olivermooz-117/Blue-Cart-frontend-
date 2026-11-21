@@ -6,6 +6,7 @@ describe('searchSlice', () => {
     query: '',
     results: [],
     allResults: [],
+    sites: [],
     status: 'idle',
     error: null,
   }
@@ -23,7 +24,8 @@ describe('searchSlice', () => {
   it('should handle runSearch fulfilled', () => {
     const payload = { 
       query: 'Samsung', 
-      results: [{ id: '1', name: 'Samsung A51' }] 
+      results: [{ id: '1', name: 'Samsung A51' }],
+      sites: ['Amazon', 'eBay']
     }
     const actual = searchReducer(initialState, { 
       type: 'search/runSearch/fulfilled', 
@@ -32,6 +34,7 @@ describe('searchSlice', () => {
     expect(actual.query).toBe('Samsung')
     expect(actual.results).toEqual(payload.results)
     expect(actual.allResults).toEqual(payload.results)
+    expect(actual.sites).toEqual(['Amazon', 'eBay'])
     expect(actual.status).toBe('succeeded')
   })
 

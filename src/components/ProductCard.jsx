@@ -6,7 +6,7 @@ const formatKsh = (amount) =>
   amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 // Some upstream image CDNs stall indefinitely instead of erroring, which
-// leaves a plain <img> spinner forever — give it a few seconds, then give up.
+// leaves a plain  spinner forever — give it a few seconds, then give up.
 const IMAGE_LOAD_TIMEOUT_MS = 5000;
 
 function ImagePlaceholder() {
@@ -71,16 +71,28 @@ export default function ProductCard({ listing }) {
     ? { href: listing.url, target: "_blank", rel: "noopener noreferrer" }
     : {};
 
+  const trustBadge = listing.pay_on_delivery
+    ? "Pay after delivery"
+    : "Pay before delivery";
+  const isHighTrust = listing.pay_on_delivery && listing.rating >= 4;
+
   return (
-    <CardTag className="product-card" {...linkProps}>
+    <CardTag
+      className={`product-card${isHighTrust ? " product-card--trusted" : ""}`}
+      {...linkProps}
+    >
       <ProductImage src={listing.image} alt={listing.title} />
-      <h3>{listing.site}</h3>
+      <div className="product-card-header">
+        <h3>{listing.site}</h3>
+        <span className={`trust-badge ${listing.pay_on_delivery ? "trust-badge--cod" : ""}`}>
+          {trustBadge}
+        </span>
+      </div>
       <p className="product-card-title">{listing.title}</p>
       <p className="price">Ksh {formatKsh(listing.price)}</p>
       <p>
         Rating: {listing.rating} ({listing.num_ratings} ratings)
       </p>
-      <p>{listing.pay_on_delivery ? "Pay after delivery" : "Pay before delivery"}</p>
       <div className="score-row">
         <span className="score mb">MB {listing.mb_score}%</span>
         <span className="score cb">CB {listing.cb_score}%</span>

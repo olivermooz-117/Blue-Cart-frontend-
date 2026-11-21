@@ -42,4 +42,16 @@
   .page-body {
     flex-direction: row;
   }
+
+  .search-main {
+    display: flex;
+    gap: 1.25rem;
+    flex: 1;
+    flex-direction: row;
+  }
+
+  .reviews-panel {
+    flex-basis: 100%;
+    margin-top: 0;
+  }
 }
