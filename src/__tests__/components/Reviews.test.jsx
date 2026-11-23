@@ -124,13 +124,15 @@ describe('Reviews', () => {
     expect(document.querySelector('.confetti')).toBeTruthy()
   })
 
-  it('pre-fills the author with the email local part, not the full email', () => {
+  it('pre-fills the author with the email local part, not the full email', async () => {
+    get.mockResolvedValueOnce({ data: { reviews: [] } })
     const store = makeStore()
     store.dispatch({
       type: 'auth/login/fulfilled',
       payload: { email: 'buyer@example.com', access_token: 'tok' },
     })
     renderWithProviders(<Reviews query="Samsung" />, { store })
+    await waitFor(() => expect(screen.getByPlaceholderText('Your name')).toBeTruthy())
     expect(screen.getByPlaceholderText('Your name').value).toBe('buyer')
     expect(screen.getByPlaceholderText('Your name').value).not.toBe('buyer@example.com')
   })

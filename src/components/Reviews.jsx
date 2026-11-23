@@ -63,15 +63,13 @@ function varColor(name) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || "#3b7597";
 }
 
+const EMPTY_REVIEWS_STATE = { reviews: [], status: "idle", error: null };
+
 export default function Reviews({ query }) {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const email = useSelector((state) => state.auth.email);
-  const reviewsState = useSelector((state) => state.reviews.byQuery[query] || {
-    reviews: [],
-    status: "idle",
-    error: null,
-  });
+  const reviewsState = useSelector((state) => state.reviews.byQuery[query] ?? EMPTY_REVIEWS_STATE);
   const { reviews, status, error: reviewsError } = reviewsState;
 
   const [author, setAuthor] = useState(email ? email.split("@")[0] : "");

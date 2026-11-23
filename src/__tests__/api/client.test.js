@@ -50,24 +50,30 @@ describe('getErrorMessage', () => {
 })
 
 describe('401 unauthorised handler', () => {
-  it('calls the registered handler for a 401 on a protected URL', () => {
+  it('calls the registered handler for a 401 on a protected URL', async () => {
     const handler = vi.fn()
     setUnauthorizedHandler(handler)
-    captured.rejected({ response: { status: 401 }, config: { url: '/history' } })
+    await expect(
+      captured.rejected({ response: { status: 401 }, config: { url: '/history' } })
+    ).rejects.toMatchObject({ response: { status: 401 } })
     expect(handler).toHaveBeenCalledTimes(1)
   })
 
-  it('does not call the handler for a 401 on /auth/login', () => {
+  it('does not call the handler for a 401 on /auth/login', async () => {
     const handler = vi.fn()
     setUnauthorizedHandler(handler)
-    captured.rejected({ response: { status: 401 }, config: { url: '/auth/login' } })
+    await expect(
+      captured.rejected({ response: { status: 401 }, config: { url: '/auth/login' } })
+    ).rejects.toMatchObject({ response: { status: 401 } })
     expect(handler).not.toHaveBeenCalled()
   })
 
-  it('does not call the handler for a 401 on /auth/register', () => {
+  it('does not call the handler for a 401 on /auth/register', async () => {
     const handler = vi.fn()
     setUnauthorizedHandler(handler)
-    captured.rejected({ response: { status: 401 }, config: { url: '/auth/register' } })
+    await expect(
+      captured.rejected({ response: { status: 401 }, config: { url: '/auth/register' } })
+    ).rejects.toMatchObject({ response: { status: 401 } })
     expect(handler).not.toHaveBeenCalled()
   })
 
