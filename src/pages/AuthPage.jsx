@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { login, register, clearAuthError } from "../store/authSlice";
 import Alert from "../components/Alert";
@@ -97,14 +97,6 @@ export default function AuthPage() {
             {isLoading ? "Please wait..." : isSignIn ? "Sign In" : "Sign Up"}
           </button>
         </form>
-
-        {isSignIn && (
-          <div className="auth-forgot">
-            <Link to="/forgot-password" className="auth-forgot-link">
-              Forgot your password?
-            </Link>
-          </div>
-        )}
       </div>
     </div>
   );
