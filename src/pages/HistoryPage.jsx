@@ -9,7 +9,8 @@ import "../styles/history.css";
 export default function HistoryPage() {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-  const { items, status, error } = useSelector((state) => state.history);
+  const expired = useSelector((state) => state.auth.expired);
+  const { items, total, status, error } = useSelector((state) => state.history);
 
   useEffect(() => {
     if (token) {
@@ -20,9 +21,15 @@ export default function HistoryPage() {
   if (!token) {
     return (
       <div className="page">
-        <p className="results-message">
-          <Link to="/auth">Sign in</Link> to see your search history.
-        </p>
+        {expired ? (
+          <p className="results-message">
+            Your session expired. <Link to="/auth">Sign in again</Link>
+          </p>
+        ) : (
+          <p className="results-message">
+            <Link to="/auth">Sign in</Link> to see your search history.
+          </p>
+        )}
       </div>
     );
   }
@@ -35,6 +42,9 @@ export default function HistoryPage() {
       {status === "failed" && <p className="results-message error">{error}</p>}
       {status === "succeeded" && items.length === 0 && (
         <p className="results-message">You haven't searched for anything yet.</p>
+      )}
+      {status === "succeeded" && total > 50 && (
+        <p className="results-message">Showing your latest 50 searches</p>
       )}
 
       <ul className="history-list">
