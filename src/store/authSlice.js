@@ -22,13 +22,25 @@ const authSlice = createSlice({
     token: localStorage.getItem("token"),
     status: "idle",
     error: null,
+    expired: false,
   },
   reducers: {
     logout(state) {
       state.email = null;
       state.token = null;
+      state.expired = false;
       localStorage.removeItem("token");
       localStorage.removeItem("email");
+    },
+    sessionExpired(state) {
+      state.token = null;
+      state.email = null;
+      state.expired = true;
+      localStorage.removeItem("token");
+      localStorage.removeItem("email");
+    },
+    clearAuthError(state) {
+      state.error = null;
     },
   },
   extraReducers: (builder) => {
@@ -65,5 +77,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, sessionExpired, clearAuthError } = authSlice.actions;
 export default authSlice.reducer;

@@ -7,6 +7,7 @@ describe('authSlice', () => {
     token: null,
     status: 'idle',
     error: null,
+    expired: false,
   }
 
   it('should handle initial state', () => {
