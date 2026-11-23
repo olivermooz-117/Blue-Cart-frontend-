@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import authReducer from "./authSlice";
-import filtersReducer from "./filtersSlice";
+import filtersReducer, { DEFAULT_WEIGHTS } from "./filtersSlice";
 import historyReducer from "./historySlice";
 import reviewsReducer from "./reviewsSlice";
 import searchReducer from "./searchSlice";
@@ -15,8 +15,7 @@ function loadPersistedFilters() {
     const parsed = JSON.parse(raw);
     return {
       filters: {
-        weights: parsed.weights || { rating: 0.35, trust: 0.15 },
-        priceRange: parsed.priceRange || { min: 0, max: 0 },
+        weights: { ...DEFAULT_WEIGHTS, ...parsed.weights },
       },
     };
   } catch {
@@ -35,16 +34,22 @@ export const store = configureStore({
   preloadedState: loadPersistedFilters(),
 });
 
-// Persist filter weights to localStorage whenever they change so the
-// FilterPanel remembers a returning visitor's preferences.
+let lastWeights = store.getState().filters.weights;
+
+// Persist filter weights to localStorage only when the weights object changes
+// by reference, so a returning visitor's preferences are remembered.
 store.subscribe(() => {
   const state = store.getState();
+  const weights = state.filters.weights;
+  if (weights === lastWeights) {
+    return;
+  }
+  lastWeights = weights;
   try {
     localStorage.setItem(
       PERSIST_KEY,
       JSON.stringify({
-        weights: state.filters.weights,
-        priceRange: state.filters.priceRange,
+        weights,
       })
     );
   } catch {
