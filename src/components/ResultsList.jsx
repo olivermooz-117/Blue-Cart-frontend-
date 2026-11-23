@@ -17,7 +17,7 @@ const SORTERS = {
 };
 
 export default function ResultsList() {
-  const { results, status, query, sites } = useSelector((state) => state.search);
+  const { results, status, query, sites, error } = useSelector((state) => state.search);
   const [sortKey, setSortKey] = useState("best");
 
   const availableSites = useMemo(() => {
@@ -51,18 +51,16 @@ export default function ResultsList() {
       <div className="results-panel">
         <Alert type="error">
           Search couldn&rsquo;t complete right now. Please try again in a moment.
+          {error ? ` ${error}` : ""}
         </Alert>
       </div>
     );
   }
   if (status === "succeeded" && results.length === 0) {
-    const unavailable = unavailableSites.length
-      ? ` The shops ${unavailableSites.join(", ")} are temporarily out of reach.`
-      : "";
     return (
       <div className="results-panel">
         <Alert type="info">
-          No results for <strong>"{query}"</strong>.{unavailable} Try another keyword.
+          No results for <strong>"{query}"</strong>. Try another keyword.
         </Alert>
       </div>
     );
@@ -99,9 +97,7 @@ export default function ResultsList() {
       </div>
       {unavailableSites.length > 0 && (
         <Alert type="warn">
-          {unavailableSites.join(", ")}
-          {unavailableSites.length === 1 ? " is" : " are"} taking a break right
-          now.
+          {unavailableSites.join(", ")} returned nothing for this search.
         </Alert>
       )}
       <div className="results-list">
