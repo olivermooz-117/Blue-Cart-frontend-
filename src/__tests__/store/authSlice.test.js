@@ -31,31 +31,22 @@ describe('authSlice', () => {
     expect(actual.status).toBe('succeeded')
   })
 
-  it('should handle login rejected with 401', () => {
-    const actual = authReducer(initialState, { 
-      type: 'auth/login/rejected', 
-      error: { message: 'Request failed with status code 401' }
+  it('should handle login rejected with server message', () => {
+    const actual = authReducer(initialState, {
+      type: 'auth/login/rejected',
+      payload: 'Invalid email or password',
     })
     expect(actual.status).toBe('failed')
     expect(actual.error).toBe('Invalid email or password')
   })
 
-  it('should handle login rejected with 409', () => {
-    const actual = authReducer(initialState, { 
-      type: 'auth/login/rejected', 
-      error: { message: 'Request failed with status code 409' }
+  it('should handle login rejected without payload', () => {
+    const actual = authReducer(initialState, {
+      type: 'auth/login/rejected',
+      error: { message: 'Network error' },
     })
     expect(actual.status).toBe('failed')
-    expect(actual.error).toBe('That email is already registered')
-  })
-
-  it('should handle login rejected with other error', () => {
-    const actual = authReducer(initialState, { 
-      type: 'auth/login/rejected', 
-      error: { message: 'Network error' }
-    })
-    expect(actual.status).toBe('failed')
-    expect(actual.error).toBe('Something went wrong, please try again')
+    expect(actual.error).toBe('Network error')
   })
 
   it('should handle logout', () => {

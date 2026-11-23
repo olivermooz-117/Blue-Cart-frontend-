@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
-import { login, register } from "../store/authSlice";
+import { login, register, clearAuthError } from "../store/authSlice";
+import Alert from "../components/Alert";
 import "../styles/auth.css";
 
 export default function AuthPage() {
@@ -11,10 +12,16 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { status, error } = useSelector((state) => state.auth);
+  const { status, error, expired } = useSelector((state) => state.auth);
 
   const isSignIn = mode === "signin";
   const isLoading = status === "loading";
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearAuthError());
+    };
+  }, [dispatch]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,14 +39,20 @@ export default function AuthPage() {
           <button
             type="button"
             className={isSignIn ? "auth-tab active" : "auth-tab"}
-            onClick={() => setMode("signin")}
+            onClick={() => {
+              dispatch(clearAuthError());
+              setMode("signin");
+            }}
           >
             Sign In
           </button>
           <button
             type="button"
             className={!isSignIn ? "auth-tab active" : "auth-tab"}
-            onClick={() => setMode("signup")}
+            onClick={() => {
+              dispatch(clearAuthError());
+              setMode("signup");
+            }}
           >
             Sign Up
           </button>
@@ -50,6 +63,10 @@ export default function AuthPage() {
             ? "Welcome back, sign in to see your search history."
             : "Create an account to save your search history."}
         </p>
+
+        {expired && (
+          <Alert type="warn">Your session expired. Please sign in again.</Alert>
+        )}
 
         <form onSubmit={handleSubmit} className="auth-form">
           <label className="auth-field">
@@ -68,7 +85,8 @@ export default function AuthPage() {
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              minLength={6}
+              minLength={8}
+              maxLength={72}
               required
             />
           </label>

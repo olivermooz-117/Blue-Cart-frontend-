@@ -1,17 +1,28 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import client from "../api/client";
+import client, { getErrorMessage } from "../api/client";
 
-export const login = createAsyncThunk("auth/login", async ({ email, password }) => {
-  const response = await client.post("/auth/login", { email, password });
-  return response.data;
-});
+export const login = createAsyncThunk(
+  "auth/login",
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const response = await client.post("/auth/login", { email, password });
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(getErrorMessage(err, "Something went wrong, please try again"));
+    }
+  }
+);
 
 export const register = createAsyncThunk(
   "auth/register",
-  async ({ email, password }) => {
-    const response = await client.post("/auth/register", { email, password });
-    return response.data;
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const response = await client.post("/auth/register", { email, password });
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(getErrorMessage(err, "Something went wrong, please try again"));
+    }
   }
 );
 
@@ -56,6 +67,7 @@ const authSlice = createSlice({
         (action) => [login.fulfilled.type, register.fulfilled.type].includes(action.type),
         (state, action) => {
           state.status = "succeeded";
+          state.expired = false;
           state.email = action.payload.email;
           state.token = action.payload.access_token;
           localStorage.setItem("token", action.payload.access_token);
@@ -66,12 +78,7 @@ const authSlice = createSlice({
         (action) => [login.rejected.type, register.rejected.type].includes(action.type),
         (state, action) => {
           state.status = "failed";
-          state.error =
-            action.error.message === "Request failed with status code 401"
-              ? "Invalid email or password"
-              : action.error.message === "Request failed with status code 409"
-              ? "That email is already registered"
-              : "Something went wrong, please try again";
+          state.error = action.payload ?? action.error.message;
         }
       );
   },
