@@ -1,20 +1,28 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import client from "../api/client";
+import client, { getErrorMessage } from "../api/client";
 
 export const fetchReviews = createAsyncThunk(
   "reviews/fetchReviews",
-  async ({ query }) => {
-    const response = await client.get("/search/reviews", { params: { q: query } });
-    return response.data;
+  async ({ query }, { rejectWithValue }) => {
+    try {
+      const response = await client.get("/search/reviews", { params: { q: query } });
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(getErrorMessage(err, "Failed to load reviews."));
+    }
   }
 );
 
 export const submitReview = createAsyncThunk(
   "reviews/submitReview",
-  async (review) => {
-    const response = await client.post("/search/reviews", review);
-    return response.data;
+  async (review, { rejectWithValue }) => {
+    try {
+      const response = await client.post("/search/reviews", review);
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(getErrorMessage(err, "Failed to submit review."));
+    }
   }
 );
 
@@ -37,7 +45,11 @@ const reviewsSlice = createSlice({
     builder
       .addCase(fetchReviews.pending, (state, action) => {
         const query = action.meta.arg.query;
-        state.byQuery[query] = { reviews: [], status: "loading", error: null };
+        state.byQuery[query] = {
+          reviews: state.byQuery[query]?.reviews ?? [],
+          status: "loading",
+          error: null,
+        };
         state.status = "loading";
       })
       .addCase(fetchReviews.fulfilled, (state, action) => {
@@ -52,9 +64,9 @@ const reviewsSlice = createSlice({
       .addCase(fetchReviews.rejected, (state, action) => {
         const query = action.meta.arg.query;
         state.byQuery[query] = {
-          reviews: [],
+          reviews: state.byQuery[query]?.reviews ?? [],
           status: "failed",
-          error: action.error.message,
+          error: action.payload ?? action.error.message,
         };
         state.status = "failed";
       })
@@ -75,7 +87,7 @@ const reviewsSlice = createSlice({
       })
       .addCase(submitReview.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = action.payload ?? action.error.message;
       });
   },
 });
