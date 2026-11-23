@@ -64,4 +64,34 @@ describe('authSlice', () => {
     expect(actual.status).toBe('succeeded')
     expect(actual.error).toBe(null)
   })
+
+  it('should handle sessionExpired clearing token, email and setting expired', () => {
+    localStorage.setItem('token', 'test-token')
+    localStorage.setItem('email', 'test@email.com')
+    const loggedInState = {
+      email: 'test@email.com',
+      token: 'test-token',
+      status: 'succeeded',
+      error: null,
+      expired: false,
+    }
+    const actual = authReducer(loggedInState, { type: 'auth/sessionExpired' })
+    expect(actual.token).toBe(null)
+    expect(actual.email).toBe(null)
+    expect(actual.expired).toBe(true)
+    expect(localStorage.getItem('token')).toBe(null)
+    expect(localStorage.getItem('email')).toBe(null)
+  })
+
+  it('should handle clearAuthError', () => {
+    const stateWithError = {
+      email: 'test@email.com',
+      token: 'test-token',
+      status: 'succeeded',
+      error: 'Bad credentials',
+      expired: false,
+    }
+    const actual = authReducer(stateWithError, { type: 'auth/clearAuthError' })
+    expect(actual.error).toBe(null)
+  })
 })

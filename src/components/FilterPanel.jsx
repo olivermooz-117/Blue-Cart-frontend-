@@ -151,7 +151,7 @@ export default function FilterPanel() {
 
       {rerankError && <Alert type="error">{rerankError}</Alert>}
 
-      <button type="button" onClick={handleApply} disabled={reranking}>
+      <button type="button" onClick={handleApply} disabled={reranking || weightSum === 0}>
         Apply filters
       </button>
     </div>
