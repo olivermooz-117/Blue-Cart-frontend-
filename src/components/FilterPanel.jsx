@@ -2,25 +2,17 @@ import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { rerankResults } from "../store/searchSlice";
-import { setPriceRange, setWeight } from "../store/filtersSlice";
+import { setPriceRange, setWeight, WEIGHTS_INFO } from "../store/filtersSlice";
+import Alert from "../components/Alert";
 import "../styles/search.css";
-
-const WEIGHTS_INFO = {
-  rating: {
-    label: "Product rating",
-    hint: "Higher = favor listings with better star ratings",
-  },
-  trust: {
-    label: "Payment safety",
-    hint: "Higher = favor listings that let you pay after delivery and are well rated",
-  },
-};
 
 export default function FilterPanel() {
   const dispatch = useDispatch();
   const weights = useSelector((state) => state.filters.weights);
   const priceRange = useSelector((state) => state.filters.priceRange);
   const allResults = useSelector((state) => state.search.allResults);
+  const reranking = useSelector((state) => state.search.reranking);
+  const rerankError = useSelector((state) => state.search.rerankError);
 
   const priceBounds = useMemo(() => {
     if (allResults.length === 0) {
@@ -51,6 +43,11 @@ export default function FilterPanel() {
     dispatch(setPriceRange({ min: priceRange.min, max: next }));
   };
 
+  const weightSum = useMemo(
+    () => Object.values(weights).reduce((sum, w) => sum + w, 0),
+    [weights]
+  );
+
   const handleApply = () => {
     if (allResults.length === 0) {
       return;
@@ -58,7 +55,7 @@ export default function FilterPanel() {
     const filtered = allResults.filter(
       (listing) => listing.price >= priceRange.min && listing.price <= priceRange.max
     );
-    dispatch(rerankResults({ listings: filtered, weights }));
+    dispatch(rerankResults({ listings: filtered.slice(0, 100), weights }));
   };
 
   const span = priceBounds.max - priceBounds.min || 1;
@@ -107,7 +104,7 @@ export default function FilterPanel() {
               type="number"
               value={priceRange.min}
               min={priceBounds.min}
-              max={priceRange.max}
+              max={priceBounds.max}
               onChange={(event) => handleMinPrice(event.target.value)}
             />
           </label>
@@ -125,26 +122,36 @@ export default function FilterPanel() {
         </div>
       </div>
 
-      {Object.keys(weights).map((key) => (
-        <div key={key} className="filter-block">
-          <div className="filter-row">
-            <span className="filter-label">{WEIGHTS_INFO[key].label}</span>
-            <span className="filter-value">{Math.round(weights[key] * 100)}%</span>
+      {Object.keys(weights).map((key) => {
+        const share =
+          weightSum === 0 ? 0 : Math.round((weights[key] / weightSum) * 100);
+        return (
+          <div key={key} className="filter-block">
+            <div className="filter-row">
+              <span className="filter-label">{WEIGHTS_INFO[key].label}</span>
+              <span className="filter-value">{share}%</span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              value={weights[key]}
+              onChange={(event) => handleChange(key, event.target.value)}
+              aria-label={WEIGHTS_INFO[key].label}
+            />
+            <p className="filter-hint">{WEIGHTS_INFO[key].hint}</p>
           </div>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.05"
-            value={weights[key]}
-            onChange={(event) => handleChange(key, event.target.value)}
-            aria-label={WEIGHTS_INFO[key].label}
-          />
-          <p className="filter-hint">{WEIGHTS_INFO[key].hint}</p>
-        </div>
-      ))}
+        );
+      })}
 
-      <button type="button" onClick={handleApply}>
+      {weightSum === 0 && (
+        <p className="filter-hint">Set at least one factor above zero.</p>
+      )}
+
+      {rerankError && <Alert type="error">{rerankError}</Alert>}
+
+      <button type="button" onClick={handleApply} disabled={reranking || weightSum === 0}>
         Apply filters
       </button>
     </div>

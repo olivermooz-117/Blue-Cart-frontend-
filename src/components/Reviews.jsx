@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Alert from "../components/Alert";
 import { fetchReviews, submitReview } from "../store/reviewsSlice";
+import { getErrorMessage } from "../api/client";
 import "../styles/search.css";
 
 function StarRating({ rating, size = 1.1 }) {
@@ -71,9 +72,9 @@ export default function Reviews({ query }) {
     status: "idle",
     error: null,
   });
-  const { reviews, status } = reviewsState;
+  const { reviews, status, error: reviewsError } = reviewsState;
 
-  const [author, setAuthor] = useState(email || "");
+  const [author, setAuthor] = useState(email ? email.split("@")[0] : "");
   const [shop, setShop] = useState("");
   const [comment, setComment] = useState("");
   const [rating, setRating] = useState(5);
@@ -88,7 +89,7 @@ export default function Reviews({ query }) {
     }
   }, [query, dispatch]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!comment.trim() || !shop.trim() || !author.trim()) {
       setSubmitError("Author, shop and comment are required.");
@@ -96,49 +97,29 @@ export default function Reviews({ query }) {
     }
     setSubmitting(true);
     setSubmitError(null);
-    dispatch(
-      submitReview({
-        query,
-        shop: shop.trim(),
-        author: author.trim(),
-        comment: comment.trim(),
-        rating: Number(rating),
-      })
-    ).then(
-      () => {
-        setSubmitting(false);
-        setShop("");
-        setComment("");
-        setRating(5);
-        setCelebrate(true);
-        setTimeout(() => setCelebrate(false), 900);
-      },
-      () => {
-        setSubmitting(false);
-        setSubmitError("Failed to submit review. Please try again.");
-      }
-    );
+    try {
+      await dispatch(
+        submitReview({
+          query,
+          shop: shop.trim(),
+          author: author.trim(),
+          comment: comment.trim(),
+          rating: Number(rating),
+        })
+      ).unwrap();
+      setShop("");
+      setComment("");
+      setRating(5);
+      setCelebrate(true);
+      setTimeout(() => setCelebrate(false), 900);
+    } catch (err) {
+      setSubmitError(
+        typeof err === "string" ? err : getErrorMessage(err, "Failed to submit review. Please try again.")
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
-
-  if (status === "loading") {
-    return (
-      <section className="reviews-panel">
-        <h3>Reviews</h3>
-        <p className="reviews-message">Loading reviews…</p>
-      </section>
-    );
-  }
-
-  if (status === "failed") {
-    return (
-      <section className="reviews-panel">
-        <h3>Reviews</h3>
-        <Alert type="error">
-          Reviews couldn&rsquo;t load right now. You can still submit one below.
-        </Alert>
-      </section>
-    );
-  }
 
   return (
     <section className="reviews-panel">
@@ -207,7 +188,13 @@ export default function Reviews({ query }) {
       </form>
 
       <div className="reviews-list">
-        {reviews.length === 0 ? (
+        {status === "loading" ? (
+          <p className="reviews-message">Loading reviews…</p>
+        ) : status === "failed" ? (
+          <Alert type="error">
+            Reviews couldn&rsquo;t load right now: {reviewsError}
+          </Alert>
+        ) : reviews.length === 0 ? (
           <p className="reviews-message">No reviews yet for “{query}”. Be the first!</p>
         ) : (
           reviews.map((review) => (

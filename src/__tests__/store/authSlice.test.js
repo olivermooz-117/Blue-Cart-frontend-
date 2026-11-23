@@ -7,6 +7,7 @@ describe('authSlice', () => {
     token: null,
     status: 'idle',
     error: null,
+    expired: false,
   }
 
   it('should handle initial state', () => {
@@ -30,31 +31,22 @@ describe('authSlice', () => {
     expect(actual.status).toBe('succeeded')
   })
 
-  it('should handle login rejected with 401', () => {
-    const actual = authReducer(initialState, { 
-      type: 'auth/login/rejected', 
-      error: { message: 'Request failed with status code 401' }
+  it('should handle login rejected with server message', () => {
+    const actual = authReducer(initialState, {
+      type: 'auth/login/rejected',
+      payload: 'Invalid email or password',
     })
     expect(actual.status).toBe('failed')
     expect(actual.error).toBe('Invalid email or password')
   })
 
-  it('should handle login rejected with 409', () => {
-    const actual = authReducer(initialState, { 
-      type: 'auth/login/rejected', 
-      error: { message: 'Request failed with status code 409' }
+  it('should handle login rejected without payload', () => {
+    const actual = authReducer(initialState, {
+      type: 'auth/login/rejected',
+      error: { message: 'Network error' },
     })
     expect(actual.status).toBe('failed')
-    expect(actual.error).toBe('That email is already registered')
-  })
-
-  it('should handle login rejected with other error', () => {
-    const actual = authReducer(initialState, { 
-      type: 'auth/login/rejected', 
-      error: { message: 'Network error' }
-    })
-    expect(actual.status).toBe('failed')
-    expect(actual.error).toBe('Something went wrong, please try again')
+    expect(actual.error).toBe('Network error')
   })
 
   it('should handle logout', () => {
@@ -70,6 +62,36 @@ describe('authSlice', () => {
     // Note: logout doesn't reset status in your slice, so we expect it to stay 'succeeded'
     // If you want to change this, update your slice
     expect(actual.status).toBe('succeeded')
+    expect(actual.error).toBe(null)
+  })
+
+  it('should handle sessionExpired clearing token, email and setting expired', () => {
+    localStorage.setItem('token', 'test-token')
+    localStorage.setItem('email', 'test@email.com')
+    const loggedInState = {
+      email: 'test@email.com',
+      token: 'test-token',
+      status: 'succeeded',
+      error: null,
+      expired: false,
+    }
+    const actual = authReducer(loggedInState, { type: 'auth/sessionExpired' })
+    expect(actual.token).toBe(null)
+    expect(actual.email).toBe(null)
+    expect(actual.expired).toBe(true)
+    expect(localStorage.getItem('token')).toBe(null)
+    expect(localStorage.getItem('email')).toBe(null)
+  })
+
+  it('should handle clearAuthError', () => {
+    const stateWithError = {
+      email: 'test@email.com',
+      token: 'test-token',
+      status: 'succeeded',
+      error: 'Bad credentials',
+      expired: false,
+    }
+    const actual = authReducer(stateWithError, { type: 'auth/clearAuthError' })
     expect(actual.error).toBe(null)
   })
 })

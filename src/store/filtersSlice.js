@@ -1,10 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  weights: {
-    rating: 0.35,
-    trust: 0.15,
+export const DEFAULT_WEIGHTS = {
+  price: 0.5,
+  rating: 0.35,
+  trust: 0.15,
+};
+
+export const WEIGHTS_INFO = {
+  price: {
+    label: "Price",
+    hint: "Higher = favor cheaper listings",
   },
+  rating: {
+    label: "Product rating",
+    hint: "Higher = favor listings with better star ratings",
+  },
+  trust: {
+    label: "Payment safety",
+    hint: "Higher = favor listings that let you pay after delivery and are well rated",
+  },
+};
+
+const initialState = {
+  weights: { ...DEFAULT_WEIGHTS },
   priceRange: { min: 0, max: 0 },
 };
 
